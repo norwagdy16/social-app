@@ -20,25 +20,20 @@ export const getAllPosts = async (req, res) => {
   }
 };
 
-// 🟢 Create a post
+// 🟢 Create a post (يدعم ImageKit)
 export const createPost = async (req, res) => {
   try {
-    // 🔹 استقبل النص من الـ body
-    const { body } = req.body;
+    const { body, image } = req.body;
 
-    // 🔹 لو فيه صورة مرفوعة بـ multer، نحفظ مسارها
-    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
-
-    // 🔹 اتأكد إن فيه user جاي من الـ middleware
     if (!req.user || !req.user._id) {
       return res.status(401).json({ message: "error", error: "User not authorized" });
     }
 
-    // 🔹 إنشاء البوست
+    // 🔹 الصورة هنا بتيجي كرابط جاهز من ImageKit
     const post = await Post.create({
       body,
-      image: imagePath,
-      user: req.user._id, // ✅ خلي بالك هنا: "_id" مش "_Id"
+      image: image || null, // هيكون URL من ImageKit
+      user: req.user._id,
     });
 
     res.json({ message: "success", post });

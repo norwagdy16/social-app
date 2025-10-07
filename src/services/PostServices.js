@@ -137,22 +137,30 @@ export async function getSinglePost(postId) {
 }
 
 // 🟢 Create a new post
-export async function createPostApi(formData) {
+// 🟢 Create a new post
+export async function createPostApi(postData) {
   try {
     const token = localStorage.getItem("token");
-    const { data } = await axios.post(API_BASE_URL, formData, {
+
+    // ✅ هنا بنبعت JSON لأن الصورة بقت URL مش ملف
+    const { data } = await axios.post(API_BASE_URL, postData, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
+
     console.log("✅ Post Created:", data);
     return data;
   } catch (error) {
-    console.error("❌ createPostApi Error:", error.response?.data || error.message);
+    console.error(
+      "❌ createPostApi Error:",
+      error.response?.data || error.message
+    );
     return error.response?.data;
   }
 }
+
 
 // 🟢 Update post
 export async function updatePostApi(postId, formData) {

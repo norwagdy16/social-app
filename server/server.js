@@ -7,6 +7,7 @@ import path from "path";
 import authRoutes from "./routes/auth.js";
 import postRoutes from "./routes/posts.js";
 import commentRoutes from "./routes/comments.js"; // ✅ مسار الكومنتات
+import imagekitRoutes from "./routes/imagekit.js";
 
 // 🔧 تحميل إعدادات البيئة
 dotenv.config();
@@ -22,6 +23,7 @@ app.use(cors()); // للسماح بالاتصال من الـ frontend
 app.use(express.json()); // قراءة JSON من body
 app.use(express.urlencoded({ extended: true })); // قراءة form-data
 app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // عرض الصور اللي اترفعت
+app.use("/api/imagekit", imagekitRoutes);
 
 // 💾 الاتصال بقاعدة بيانات MongoDB
 mongoose

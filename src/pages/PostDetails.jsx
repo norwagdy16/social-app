@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getSinglePosts } from "../services/PostServices";
+// import { getSinglePosts } from "../services/PostServices";
 import PostCard from "../components/PostCard";
 import LoadingScreen from "../components/LodingScrean";
 
