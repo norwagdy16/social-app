@@ -20,7 +20,7 @@ export default function PostCard({ post, commentLimit, callback }) {
   const { userData } = useContext(AuthContext);
 
   const [commentContent, setCommentContent] = useState("");
-  const [isloading, setIsloading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [comments, setComments] = useState(post.comments || []);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -29,21 +29,22 @@ export default function PostCard({ post, commentLimit, callback }) {
   const [previewImage, setPreviewImage] = useState(post.image);
   const [editLoading, setEditLoading] = useState(false);
 
-  //comment
- //comment
-async function createComment(e) {
-  e.preventDefault();
-  setIsloading(true);
-  const response = await createCommentApi(commentContent, post._id); // ✅ التصحيح هنا
-  if (response.message === "success") {
-    await getPostComments();
-    setCommentContent("");
+  // console.log("👤 userData:", userData);
+  // console.log("📄 post.user:", post.user);
+
+  // 🟢 Create comment
+  async function createComment(e) {
+    e.preventDefault();
+    setIsLoading(true);
+    const response = await createCommentApi(commentContent, post._id);
+    if (response.message === "success") {
+      await getPostComments();
+      setCommentContent("");
+    }
+    setIsLoading(false);
   }
-  setIsloading(false);
-}
 
-
-  //get comment
+  // 🟢 Get comments
   async function getPostComments() {
     const response = await getPostCommentApi(post._id);
     if (response.message === "success") {
@@ -51,14 +52,14 @@ async function createComment(e) {
     }
   }
 
-  //delete
+  // 🟢 Delete post
   async function handleDelete() {
     const result = await Swal.fire({
       title: "Are you sure you want to delete?",
       showCancelButton: true,
       confirmButtonText: "OK",
       cancelButtonText: "Cancel",
-      icon: null,
+      icon: "warning",
     });
 
     if (result.isConfirmed) {
@@ -68,45 +69,68 @@ async function createComment(e) {
         if (response.message === "success") {
           await Swal.fire({
             title: "Post deleted successfully.",
-            showConfirmButton: true,
             confirmButtonText: "OK",
-            icon: null,
+            icon: "success",
           });
           await callback();
         } else {
           await Swal.fire({
             title: "Failed to delete post.",
             confirmButtonText: "OK",
-            icon: null,
+            icon: "error",
           });
         }
       } catch (error) {
         await Swal.fire({
           title: "Something went wrong. Please try again.",
           confirmButtonText: "OK",
-          icon: null,
+          icon: "error",
         });
       }
     }
   }
 
-  //edit
-  async function saveEdit() {
-    setEditLoading(true);
-    const formData = new FormData();
-    formData.append("body", editBody);
-    if (editImage) formData.append("image", editImage);
+  // 🟢 Update post
+  // async function saveEdit() {
+  //   setEditLoading(true);
+  //   const formData = new FormData();
+  //   formData.append("body", editBody);
+  //   if (editImage) formData.append("image", editImage);
 
-    const response = await updatePostApi(post._id, formData);
-    if (response.message === "success") {
-      toast.success("Post updated successfully");
-      setIsEditing(false);
-      await callback();
-    } else {
-      toast.error("Failed to update post");
-    }
-    setEditLoading(false);
+  //   const response = await updatePostApi(post._id, formData);
+  //   if (response.message === "success") {
+  //     toast.success("Post updated successfully");
+  //     setIsEditing(false);
+  //     await callback();
+  //   } else {
+  //     toast.error("Failed to update post");
+  //   }
+  //   setEditLoading(false);
+  // }
+async function saveEdit() {
+  setEditLoading(true);
+
+  const payload = {
+    body: editBody,
+    imageFile: editImage, // الصورة الجديدة من جهاز المستخدم
+    oldImage: post.image, // الصورة القديمة (لو المستخدم مخترش جديدة)
+  };
+
+  const response = await updatePostApi(post._id, payload);
+
+  if (response.message === "success") {
+    toast.success("Post updated successfully");
+    setIsEditing(false);
+    await callback();
+  } else {
+    toast.error("Failed to update post");
   }
+
+  setEditLoading(false);
+}
+
+  // ✅ Check if current user is the post owner
+  const isPostOwner = [userData?.id, userData?._id].includes(post.user?._id);
 
   return (
     <div className="bg-white rounded-xl shadow-md border border-gray-200 py-4 px-5 my-6">
@@ -118,13 +142,15 @@ async function createComment(e) {
           data={post.createdAt}
         />
 
-        {userData._id === post.user._id && (
+        {/* ✅ Show dropdown only for the post owner */}
+        {isPostOwner && (
           <DropDownPost
             onEdit={() => setIsEditing(true)}
             onDelete={handleDelete}
           />
         )}
       </div>
+
       {/* Body or Edit Mode */}
       {isEditing ? (
         <div className="bg-gray-50 rounded-xl border border-gray-200 p-4 space-y-4 animate-fadeIn">
@@ -134,7 +160,7 @@ async function createComment(e) {
           <Textarea
             value={editBody}
             onChange={(e) => setEditBody(e.target.value)}
-            minRows={1}
+            minRows={2}
             className="rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 text-gray-700"
             placeholder="Update your post content..."
           />
@@ -169,7 +195,7 @@ async function createComment(e) {
               }}
               className="hidden"
             />
-            📸Change Image
+            📸 Change Image
           </label>
 
           {/* Buttons */}
@@ -195,8 +221,10 @@ async function createComment(e) {
       ) : (
         <PostBody body={post.body} image={post.image} />
       )}
+
       {/* Footer */}
-      <PostFooter postId={post._id} commentNumber={comments.length} />{" "}
+      <PostFooter postId={post._id} commentNumber={comments.length} />
+
       {/* Comment input */}
       <form
         onSubmit={createComment}
@@ -210,14 +238,15 @@ async function createComment(e) {
           className="flex-1 rounded-full border-gray-300 focus:ring-2 focus:ring-blue-400"
         />
         <Button
-          isLoading={isloading}
+          isLoading={isLoading}
           type="submit"
           disabled={commentContent.length < 2}
           className="bg-blue-600 text-white hover:bg-blue-700 rounded-full px-5"
         >
           Comment
         </Button>
-      </form> 
+      </form>
+
       {/* Comments */}
       {comments.length > 0 && (
         <div className="mt-4 space-y-3">

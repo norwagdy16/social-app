@@ -1,5 +1,4 @@
 /** @format */
-
 import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { FaEnvelope, FaVenusMars, FaBirthdayCake } from "react-icons/fa";
@@ -15,15 +14,27 @@ export default function ProfilePage() {
     );
   }
 
+  // ✅ لو عند المستخدم صورة، نعرضها — لو مفيش نرجع للصورة الافتراضية
+  const userPhoto =
+    userData.photo ||
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(
+      userData.name
+    )}&background=9333ea&color=fff&size=150`;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 py-10 px-4">
       <div className="max-w-4xl mx-auto space-y-8">
         {/* User Info Card */}
         <div className="bg-white rounded-3xl shadow-lg p-8 flex flex-col items-center text-center">
           <img
-            src={`https://ui-avatars.com/api/?name=${userData.name}&background=9333ea&color=fff&size=150`}
-            alt="User Avatar"
-            className="w-32 h-32 rounded-full border-4 border-purple-500 shadow-lg"
+            src={userPhoto}
+            alt={userData.name}
+            className="w-32 h-32 rounded-full border-4 border-purple-500 shadow-lg object-cover"
+            onError={(e) => {
+              e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                userData.name
+              )}&background=9333ea&color=fff&size=150`;
+            }}
           />
           <h1 className="text-3xl font-extrabold text-gray-900 mt-4">
             {userData.name}

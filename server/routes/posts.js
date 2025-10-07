@@ -14,7 +14,7 @@ const router = express.Router();
 router.get("/", getAllPosts);
 router.get("/:id", getSinglePost);
 router.post("/", protect, upload.single("image"), createPost); // ← هنا أضفنا الرفع
-router.put("/:id", protect, updatePost);
+router.put("/:id", protect, upload.single("image"), updatePost);
 router.delete("/:id", protect, deletePost);
 
 export default router;

@@ -163,22 +163,52 @@ export async function createPostApi(postData) {
 
 
 // 🟢 Update post
-export async function updatePostApi(postId, formData) {
+export async function updatePostApi(postId, { body, imageFile, oldImage }) {
   try {
     const token = localStorage.getItem("token");
-    const { data } = await axios.put(`${API_BASE_URL}/${postId}`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data", // ✅ لو فيه صورة
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    let imageUrl = oldImage;
+
+    // ✅ لو في صورة جديدة نرفعها للسيرفر الأول
+    if (imageFile) {
+      const uploadData = new FormData();
+      uploadData.append("file", imageFile);
+
+      const uploadRes = await axios.post(
+        "https://new-react-production.up.railway.app/api/upload",
+        uploadData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      imageUrl = uploadRes.data.url;
+    }
+
+    // 🔹 بعد الرفع نحدث البوست
+    const { data } = await axios.put(
+      `${API_BASE_URL}/${postId}`,
+      { body, image: imageUrl },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
     console.log("✅ Post Updated:", data);
     return data;
   } catch (error) {
-    console.error("❌ updatePostApi Error:", error.response?.data || error.message);
+    console.error(
+      "❌ updatePostApi Error:",
+      error.response?.data || error.message
+    );
     return error.response?.data;
   }
 }
+
 
 // 🟢 Delete post
 export async function deletePostApi(postId) {

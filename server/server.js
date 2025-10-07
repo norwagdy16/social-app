@@ -8,6 +8,8 @@ import authRoutes from "./routes/auth.js";
 import postRoutes from "./routes/posts.js";
 import commentRoutes from "./routes/comments.js";
 import imagekitRoutes from "./routes/imagekit.js";
+import uploadRoutes from "./routes/uploadRoutes.js";
+
 
 dotenv.config();
 
@@ -31,6 +33,8 @@ app.use("/api/imagekit", imagekitRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
+app.use("/api/upload", uploadRoutes);
+
 
 mongoose
   .connect(process.env.MONGO_URI)

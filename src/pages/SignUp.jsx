@@ -285,7 +285,7 @@ export default function Register() {
       if (response.message) {
         localStorage.setItem("userName", userData.name);
         toast.success("🎉 Registered successfully!");
-        navigate("/login");
+        navigate("/signin");
       } else {
         setApiError(response.error || "Sign up failed");
       }
