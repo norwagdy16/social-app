@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-// import { getSinglePosts } from "../services/PostServices";
+import { getSinglePost } from "../services/PostServices";
 import PostCard from "../components/PostCard";
 import LoadingScreen from "../components/LodingScrean";
 
@@ -14,7 +14,7 @@ export default function PostDetails() {
   const [post, setPost] = useState(null);
 
   async function getPosts() {
-    const response = await getSinglePosts(id);
+    const response = await getSinglePost(id);
 
     if (response && response.message === "success") {
       setPost(response.post);

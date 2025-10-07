@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getAllPosts,
+  getSinglePost,
   createPost,
   updatePost,
   deletePost,
@@ -11,6 +12,7 @@ import upload from "../middlewares/uploadMiddleware.js";
 const router = express.Router();
 
 router.get("/", getAllPosts);
+router.get("/:id", getSinglePost);
 router.post("/", protect, upload.single("image"), createPost); // ← هنا أضفنا الرفع
 router.put("/:id", protect, updatePost);
 router.delete("/:id", protect, deletePost);

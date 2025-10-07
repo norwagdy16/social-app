@@ -20,6 +20,28 @@ export const getAllPosts = async (req, res) => {
   }
 };
 
+// 🟢 Get single post by ID
+export const getSinglePost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id)
+      .populate("user", "name photo")
+      .populate({
+        path: "comments",
+        populate: { path: "user", select: "name photo" },
+      });
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    res.json({ message: "success", post });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "error", error: err.message });
+  }
+};
+
+
 // 🟢 Create a post (يدعم ImageKit)
 export const createPost = async (req, res) => {
   try {
