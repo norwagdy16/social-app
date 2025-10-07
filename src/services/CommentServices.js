@@ -76,12 +76,14 @@ export async function createCommentApi(commentContent, postId) {
         },
       }
     );
-    console.log(data);
+    console.log("✅ Comment Created:", data);
     return data;
   } catch (error) {
-    console.log(error.response?.data || error.message);
+    console.error("❌ createCommentApi Error:", error.response?.data || error.message);
+    return error.response?.data;
   }
 }
+
 
 // 🗑️ حذف كومنت
 export async function deleteCommentApi(commentId) {

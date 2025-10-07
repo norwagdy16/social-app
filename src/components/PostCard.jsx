@@ -4,7 +4,7 @@ import React, { useContext, useState } from "react";
 import PostHeader from "./card/PostHeader";
 import PostBody from "./card/PostBody";
 import PostFooter from "./card/PostFooter";
-// import Comments from "./Comments";
+import Comments from "./Comments";
 import { Button, Input, Textarea } from "@heroui/react";
 import {
   createCommentApi,
@@ -30,16 +30,18 @@ export default function PostCard({ post, commentLimit, callback }) {
   const [editLoading, setEditLoading] = useState(false);
 
   //comment
-  async function createComment(e) {
-    e.preventDefault();
-    setIsloading(true);
-    const response = await createCimmentApi(commentContent, post._id);
-    if (response.message === "success") {
-      await getPostComments();
-      setCommentContent("");
-    }
-    setIsloading(false);
+ //comment
+async function createComment(e) {
+  e.preventDefault();
+  setIsloading(true);
+  const response = await createCommentApi(commentContent, post._id); // ✅ التصحيح هنا
+  if (response.message === "success") {
+    await getPostComments();
+    setCommentContent("");
   }
+  setIsloading(false);
+}
+
 
   //get comment
   async function getPostComments() {
@@ -196,7 +198,7 @@ export default function PostCard({ post, commentLimit, callback }) {
       {/* Footer */}
       <PostFooter postId={post._id} commentNumber={comments.length} />{" "}
       {/* Comment input */}
-      {/* <form
+      <form
         onSubmit={createComment}
         className="flex items-center gap-3 mt-3 border-t pt-3"
       >
@@ -215,9 +217,9 @@ export default function PostCard({ post, commentLimit, callback }) {
         >
           Comment
         </Button>
-      </form> */}
+      </form> 
       {/* Comments */}
-      {/* {comments.length > 0 && (
+      {comments.length > 0 && (
         <div className="mt-4 space-y-3">
           {comments.slice(0, commentLimit).map((comment) => (
             <Comments
@@ -228,7 +230,7 @@ export default function PostCard({ post, commentLimit, callback }) {
             />
           ))}
         </div>
-      )} */}
+      )}
     </div>
   );
 }

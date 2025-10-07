@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     dateOfBirth: { type: Date, required: true },
     gender: { type: String, enum: ["male", "female"], required: true },
+    photo: { type: String, required: true },
   },
   { timestamps: true }
 );
