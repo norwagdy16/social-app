@@ -27,7 +27,7 @@ export default function Posts() {
         ) : (
           posts.map((post) => (
             <PostCard
-              key={post.id}
+              key={post._id}
               commentLimit={1}
               callback={getAllPostsApi}
               post={post}
