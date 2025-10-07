@@ -27,7 +27,7 @@ export const createPost = async (req, res) => {
     const { body } = req.body;
 
     // 🔹 لو فيه صورة مرفوعة بـ multer، نحفظ مسارها
-    const imagePath = req.file ? `/uploads/${req.file.filename}` : "";
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
 
     // 🔹 اتأكد إن فيه user جاي من الـ middleware
     if (!req.user || !req.user._id) {
