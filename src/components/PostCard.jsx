@@ -7,7 +7,7 @@ import PostFooter from "./card/PostFooter";
 // import Comments from "./Comments";
 import { Button, Input, Textarea } from "@heroui/react";
 import {
-  createCimmentApi,
+  createCommentApi,
   getPostCommentApi,
 } from "../services/CommentServices";
 import { AuthContext } from "../context/AuthContext";

@@ -16,6 +16,7 @@ export const getAllPosts = async (req, res) => {
     res.json({ message: "success", posts });
   } catch (err) {
     res.status(500).json({ message: "error", error: err.message });
+    console.error(err)
   }
 };
 
@@ -26,11 +27,13 @@ export const createPost = async (req, res) => {
     const post = await Post.create({
       body,
       image,
-      user: req.userId, 
+      user: req.user._Id, 
     });
     res.json({ message: "success", post });
   } catch (err) {
     res.status(500).json({ message: "error", error: err.message });
+    console.error(err)
+
   }
 };
 
@@ -46,6 +49,7 @@ export const updatePost = async (req, res) => {
     res.json({ message: "success", post: updated });
   } catch (err) {
     res.status(500).json({ message: "error", error: err.message });
+    console.error(err)
   }
 };
 
@@ -57,5 +61,6 @@ export const deletePost = async (req, res) => {
     res.json({ message: "success" });
   } catch (err) {
     res.status(500).json({ message: "error", error: err.message });
+    console.error(err)
   }
 };
