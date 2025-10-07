@@ -8,12 +8,12 @@ export default function UploadImage({ onSuccess }) {
       authenticationEndpoint="https://new-react-production.up.railway.app/api/imagekit/auth"
     >
       <IKUpload
-        fileName="myImage.jpg"
+        fileName="post-image.jpg"
         onSuccess={(res) => {
-          console.log("Uploaded:", res.url);
+          console.log("✅ Uploaded Successfully:", res);
           onSuccess(res.url);
         }}
-        onError={(err) => console.log("Error:", err)}
+        onError={(err) => console.error("❌ Upload Error:", err)}
       />
     </IKContext>
   );

@@ -146,11 +146,11 @@ import { useState } from "react";
 import { createPostApi } from "../services/PostServices";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import UploadImage from "../components/UploadImage"; // ⬅️ نضيف الكومبوننت ده
+import UploadImage from "../components/UploadImage"; // ✅ استيراد مكون رفع الصورة من ImageKit
 
 export default function AddPosts({ callback }) {
   const [postBody, setPostBody] = useState("");
-  const [image, setImage] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -160,20 +160,21 @@ export default function AddPosts({ callback }) {
     setLoading(true);
 
     try {
-      // بنبعت JSON مش FormData لأن الصورة بقت لينك
-      const response = await createPostApi({
+      const data = {
         body: postBody,
-        image,
-      });
+        image: imageUrl, // ✅ الصورة من ImageKit (رابط مباشر)
+      };
+
+      const response = await createPostApi(data);
 
       if (response.message === "success") {
         toast.success("🌸 Post added successfully!");
         setPostBody("");
-        setImage("");
+        setImageUrl("");
 
         if (callback) callback();
 
-        navigate("/Posts");
+        navigate("/posts");
       } else {
         toast.error("❌ Failed to add post");
       }
@@ -193,31 +194,35 @@ export default function AddPosts({ callback }) {
           Create a Lovely Post 💕
         </h2>
 
+        {/* Form */}
         <form onSubmit={createPost} className="flex flex-col gap-6">
-          {/* ✅ Image Upload عبر ImageKit */}
+          {/* Image Upload */}
           <div className="flex flex-col items-center">
-            {image ? (
+            {imageUrl ? (
               <div className="relative w-full">
                 <img
-                  src={image}
-                  alt="Preview"
+                  src={imageUrl}
                   className="w-full h-64 object-cover rounded-3xl border-4 border-pink-300 shadow-lg"
+                  alt="Preview"
                 />
                 <button
                   type="button"
-                  onClick={() => setImage("")}
+                  onClick={() => setImageUrl("")}
                   className="absolute top-3 right-3 bg-rose-500 text-white p-2 rounded-full shadow-md hover:bg-rose-600 transition"
                 >
                   ✕
                 </button>
               </div>
             ) : (
-              <UploadImage
-                onSuccess={(url) => {
-                  setImage(url);
-                  toast.success("✅ Image uploaded successfully!");
-                }}
-              />
+              <div className="w-32 h-32 flex flex-col items-center justify-center rounded-full bg-pink-100 hover:bg-pink-200 text-pink-600 shadow-md cursor-pointer transition">
+                <UploadImage
+                  onSuccess={(url) => {
+                    setImageUrl(url);
+                    toast.success("🌸 Image uploaded!");
+                  }}
+                />
+                <span className="mt-2 text-sm font-semibold">Upload</span>
+              </div>
             )}
           </div>
 
@@ -227,13 +232,18 @@ export default function AddPosts({ callback }) {
             onChange={(e) => setPostBody(e.target.value)}
             placeholder="Write something beautiful... 🌷"
             minRows={4}
-            className="w-full h-32 resize-none border border-pink-300 rounded-xl p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-400"
+            className="w-full h-32 resize-none 
+             border border-pink-300 rounded-xl 
+             p-3 text-gray-700 
+             focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-400"
           />
 
           {/* Button */}
           <Button
             type="submit"
-            className="w-full py-3 rounded-full font-bold text-lg bg-gradient-to-r from-pink-400 to-purple-500 text-white hover:from-pink-500 hover:to-purple-600 shadow-md transition"
+            className="w-full py-3 rounded-full font-bold text-lg
+                   bg-gradient-to-r from-pink-400 to-purple-500 text-white 
+                   hover:from-pink-500 hover:to-purple-600 shadow-md transition"
           >
             {loading ? <Spinner color="white" size="sm" /> : "Add Post"}
           </Button>

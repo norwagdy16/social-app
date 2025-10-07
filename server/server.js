@@ -31,6 +31,10 @@ mongoose
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch((err) => console.log("❌ DB Error:", err));
 
+  app.use(cors({
+  origin: "*", // أو اكتبي هنا رابط الـ frontend لو عايزة تأمني أكتر
+}));
+
 // 📡 إعداد الـ Routes
 app.use("/api/auth", authRoutes);        // 🔐 تسجيل الدخول والتسجيل
 app.use("/api/posts", postRoutes);       // 📝 البوستات (بها رفع الصور)
