@@ -15,25 +15,36 @@ export const getAllPosts = async (req, res) => {
 
     res.json({ message: "success", posts });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "error", error: err.message });
-    console.error(err)
   }
 };
 
 // 🟢 Create a post
 export const createPost = async (req, res) => {
   try {
-    const { body, image } = req.body;
+    // 🔹 استقبل النص من الـ body
+    const { body } = req.body;
+
+    // 🔹 لو فيه صورة مرفوعة بـ multer، نحفظ مسارها
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : "";
+
+    // 🔹 اتأكد إن فيه user جاي من الـ middleware
+    if (!req.user || !req.user._id) {
+      return res.status(401).json({ message: "error", error: "User not authorized" });
+    }
+
+    // 🔹 إنشاء البوست
     const post = await Post.create({
       body,
-      image,
-      user: req.user._Id, 
+      image: imagePath,
+      user: req.user._id, // ✅ خلي بالك هنا: "_id" مش "_Id"
     });
+
     res.json({ message: "success", post });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "error", error: err.message });
-    console.error(err)
-
   }
 };
 
@@ -48,8 +59,8 @@ export const updatePost = async (req, res) => {
     );
     res.json({ message: "success", post: updated });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "error", error: err.message });
-    console.error(err)
   }
 };
 
@@ -60,7 +71,7 @@ export const deletePost = async (req, res) => {
     await Post.findByIdAndDelete(req.params.id);
     res.json({ message: "success" });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "error", error: err.message });
-    console.error(err)
   }
 };
