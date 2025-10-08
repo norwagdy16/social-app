@@ -18,7 +18,7 @@ export async function getUserDataApi() {
       },
     });
 
-    console.log("✅ User Data:", data);
+    // console.log("✅ User Data:", data);
     return data;
   } catch (error) {
     console.error(
@@ -32,7 +32,7 @@ export async function getUserDataApi() {
 export async function sendRegister(userData) {
   try {
     const { data } = await axios.post(`${API_BASE_URL}/signup`, userData);
-    console.log("✅ Register:", data);
+    // console.log("✅ Register:", data);
 
     if (data?.token) localStorage.setItem("token", data.token);
 
@@ -49,7 +49,7 @@ export async function sendRegister(userData) {
 export async function sendLogin(userData) {
   try {
     const { data } = await axios.post(`${API_BASE_URL}/signin`, userData);
-    console.log("✅ Login:", data);
+    // console.log("✅ Login:", data);
 
     if (data?.token) localStorage.setItem("token", data.token);
 

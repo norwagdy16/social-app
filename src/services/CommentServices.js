@@ -17,7 +17,7 @@ export async function createCommentApi(commentContent, postId) {
         },
       }
     );
-    console.log("✅ Comment Created:", data);
+    // console.log("✅ Comment Created:", data);
     return data;
   } catch (error) {
     console.error("❌ createCommentApi Error:", error.response?.data || error.message);

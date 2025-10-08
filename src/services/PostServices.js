@@ -15,7 +15,7 @@ export async function getAllPosts() {
         sort: "-createdAt",
       },
     });
-    console.log("✅ All Posts:", data);
+    // console.log("✅ All Posts:", data);
     return data;
   } catch (error) {
     console.error(
@@ -35,7 +35,7 @@ export async function getSinglePost(postId) {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("✅ Single Post:", data);
+    // console.log("✅ Single Post:", data);
     return data;
   } catch (error) {
     console.error(
@@ -58,7 +58,7 @@ export async function createPostApi(postData) {
       },
     });
 
-    console.log("✅ Post Created:", data);
+    // console.log("✅ Post Created:", data);
     return data;
   } catch (error) {
     console.error(
@@ -103,7 +103,7 @@ export async function updatePostApi(postId, { body, imageFile, oldImage }) {
       }
     );
 
-    console.log("✅ Post Updated:", data);
+    // console.log("✅ Post Updated:", data);
     return data;
   } catch (error) {
     console.error(
@@ -123,7 +123,7 @@ export async function deletePostApi(postId) {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("🗑️ Post Deleted:", data);
+    // console.log("🗑️ Post Deleted:", data);
     return data;
   } catch (error) {
     console.error(
