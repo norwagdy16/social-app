@@ -16,19 +16,17 @@ dotenv.config();
 const app = express();
 const __dirname = path.resolve();
 
-// ✅ فعّلي CORS قبل أي routes
 app.use(
   cors({
-    origin: "*", // مؤقتًا مفتوحة لكل مكان
+    origin: "*", 
   })
 );
 
-// Middleware أساسية
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// ✅ كل الـ routes هنا بعد الـ CORS
 app.use("/api/imagekit", imagekitRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);

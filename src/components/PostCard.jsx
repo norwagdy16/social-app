@@ -90,44 +90,27 @@ export default function PostCard({ post, commentLimit, callback }) {
     }
   }
 
-  // 🟢 Update post
-  // async function saveEdit() {
-  //   setEditLoading(true);
-  //   const formData = new FormData();
-  //   formData.append("body", editBody);
-  //   if (editImage) formData.append("image", editImage);
+  async function saveEdit() {
+    setEditLoading(true);
 
-  //   const response = await updatePostApi(post._id, formData);
-  //   if (response.message === "success") {
-  //     toast.success("Post updated successfully");
-  //     setIsEditing(false);
-  //     await callback();
-  //   } else {
-  //     toast.error("Failed to update post");
-  //   }
-  //   setEditLoading(false);
-  // }
-async function saveEdit() {
-  setEditLoading(true);
+    const payload = {
+      body: editBody,
+      imageFile: editImage,
+      oldImage: post.image,
+    };
 
-  const payload = {
-    body: editBody,
-    imageFile: editImage, // الصورة الجديدة من جهاز المستخدم
-    oldImage: post.image, // الصورة القديمة (لو المستخدم مخترش جديدة)
-  };
+    const response = await updatePostApi(post._id, payload);
 
-  const response = await updatePostApi(post._id, payload);
+    if (response.message === "success") {
+      toast.success("Post updated successfully");
+      setIsEditing(false);
+      await callback();
+    } else {
+      toast.error("Failed to update post");
+    }
 
-  if (response.message === "success") {
-    toast.success("Post updated successfully");
-    setIsEditing(false);
-    await callback();
-  } else {
-    toast.error("Failed to update post");
+    setEditLoading(false);
   }
-
-  setEditLoading(false);
-}
 
   // ✅ Check if current user is the post owner
   const isPostOwner = [userData?.id, userData?._id].includes(post.user?._id);
@@ -137,8 +120,8 @@ async function saveEdit() {
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <PostHeader
-          photo={post.user.photo}
-          name={post.user.name}
+          photo={post?.user?.photo || "/default-avatar.png"}
+          name={post?.user?.name || "Unknown User"}
           data={post.createdAt}
         />
 

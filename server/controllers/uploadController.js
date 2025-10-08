@@ -1,4 +1,5 @@
-// controllers/uploadController.js
+/** @format */
+
 import axios from "axios";
 import FormData from "form-data";
 import dotenv from "dotenv";
@@ -15,14 +16,13 @@ export const uploadToImageKit = async (req, res) => {
     formData.append("file", file.buffer.toString("base64"));
     formData.append("fileName", file.originalname);
 
-    // 🧠 رفع الصورة من الباك فقط (بالمفتاح السري)
     const uploadResponse = await axios.post(
       "https://upload.imagekit.io/api/v1/files/upload",
       formData,
       {
         headers: formData.getHeaders(),
         auth: {
-          username: process.env.IMAGEKIT_PRIVATE_KEY, // من .env
+          username: process.env.IMAGEKIT_PRIVATE_KEY,
           password: "",
         },
       }
@@ -30,7 +30,10 @@ export const uploadToImageKit = async (req, res) => {
 
     res.json({ message: "success", url: uploadResponse.data.url });
   } catch (error) {
-    console.error("❌ uploadToImageKit Error:", error.response?.data || error.message);
+    console.error(
+      "❌ uploadToImageKit Error:",
+      error.response?.data || error.message
+    );
     res.status(500).json({
       message: "error",
       error: error.response?.data || error.message,

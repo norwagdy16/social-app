@@ -1,3 +1,5 @@
+/** @format */
+
 // controllers/postController.js
 import Post from "../models/Post.js";
 import Comment from "../models/Comment.js";
@@ -41,20 +43,20 @@ export const getSinglePost = async (req, res) => {
   }
 };
 
-
-// 🟢 Create a post (يدعم ImageKit)
+// 🟢 Create a post
 export const createPost = async (req, res) => {
   try {
     const { body, image } = req.body;
 
     if (!req.user || !req.user._id) {
-      return res.status(401).json({ message: "error", error: "User not authorized" });
+      return res
+        .status(401)
+        .json({ message: "error", error: "User not authorized" });
     }
 
-    // 🔹 الصورة هنا بتيجي كرابط جاهز من ImageKit
     const post = await Post.create({
       body,
-      image: image || null, // هيكون URL من ImageKit
+      image: image || null,
       user: req.user._id,
     });
 

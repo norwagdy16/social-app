@@ -1,11 +1,11 @@
-// middlewares/uploadMiddleware.js
+/** @format */
+
 import multer from "multer";
 import path from "path";
 
-// مكان تخزين الصور مؤقتًا
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/"); // هنخزنها مؤقتًا في فولدر اسمه uploads
+    cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
@@ -13,7 +13,6 @@ const storage = multer.diskStorage({
   },
 });
 
-// فلترة الملفات (نقبل صور فقط)
 function fileFilter(req, file, cb) {
   if (file.mimetype.startsWith("image/")) {
     cb(null, true);
@@ -22,7 +21,6 @@ function fileFilter(req, file, cb) {
   }
 }
 
-// إعداد multer
 const upload = multer({ storage, fileFilter });
 
 export default upload;

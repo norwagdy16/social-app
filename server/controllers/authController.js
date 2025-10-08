@@ -1,3 +1,5 @@
+/** @format */
+
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
@@ -7,35 +9,30 @@ export const registerUser = async (req, res) => {
   try {
     const { name, email, password, dateOfBirth, gender, photo } = req.body;
 
-    // تحقق من الحقول المطلوبة
     if (!name || !email || !password || !photo) {
       return res
         .status(400)
         .json({ error: "All fields including photo are required" });
     }
 
-    // تحقق لو الإيميل موجود بالفعل
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ error: "Email already registered" });
     }
 
-    // تشفير الباسورد
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // إنشاء مستخدم جديد
     const newUser = new User({
       name,
       email,
       password: hashedPassword,
       dateOfBirth,
       gender,
-      photo, // ✅ حفظ الصورة هنا
+      photo,
     });
 
     await newUser.save();
 
-    // إنشاء توكن JWT
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
@@ -49,7 +46,7 @@ export const registerUser = async (req, res) => {
         email: newUser.email,
         gender: newUser.gender,
         dateOfBirth: newUser.dateOfBirth,
-        photo: newUser.photo, // ✅ رجعي الصورة
+        photo: newUser.photo, 
       },
     });
   } catch (error) {
@@ -58,22 +55,18 @@ export const registerUser = async (req, res) => {
   }
 };
 
-// 🔑 Login user
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // البحث عن المستخدم
     const user = await User.findOne({ email });
     if (!user)
       return res.status(400).json({ error: "Invalid email or password" });
 
-    // مقارنة الباسورد
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
       return res.status(400).json({ error: "Invalid email or password" });
 
-    // إنشاء JWT
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
@@ -87,7 +80,7 @@ export const loginUser = async (req, res) => {
         email: user.email,
         gender: user.gender,
         dateOfBirth: user.dateOfBirth,
-        photo: user.photo, // ✅ رجعي الصورة عند تسجيل الدخول
+        photo: user.photo,
       },
     });
   } catch (error) {
@@ -113,7 +106,7 @@ export const getProfileData = async (req, res) => {
         email: user.email,
         gender: user.gender,
         dateOfBirth: user.dateOfBirth,
-        photo: user.photo, // ✅ عرض الصورة في البروفايل
+        photo: user.photo,
       },
     });
   } catch (err) {

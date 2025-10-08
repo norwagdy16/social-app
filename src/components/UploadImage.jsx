@@ -7,26 +7,30 @@ export default function UploadImage({ onSuccess }) {
       publicKey="public_AsDvjKGMeni0BHtEAJ9itb72NEQ="
       urlEndpoint="https://ik.imagekit.io/myreactblog"
       authenticator={async () => {
-        // ✅ هنا بنجيب بيانات الـ auth من السيرفر بتاعك
         const response = await fetch(
           "https://new-react-production.up.railway.app/api/imagekit/auth"
         );
         const data = await response.json();
-        return data; // { token, expire, signature }
+        return data;
       }}
     >
-      <div className="flex flex-col items-center gap-2">
+      <div className="relative w-[180px] h-[180px]">
         <IKUpload
-          fileName="my-upload.jpg"
-          onSuccess={(res) => {
-            console.log("✅ Uploaded:", res.url);
-            onSuccess(res.url); // بنبعت رابط الصورة للأب
-          }}
+          fileName="upload.jpg"
+          className="absolute inset-0 opacity-0 cursor-pointer z-10"
+          onSuccess={(res) => onSuccess(res.url)}
           onError={(err) => {
             console.error("❌ Upload Error:", err);
-            alert("فشل رفع الصورة ❌");
+            alert("failed❌");
           }}
         />
+
+        <div className="w-full h-full flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-pink-300 bg-pink-50 hover:bg-pink-100 transition shadow-md">
+          <span className="text-5xl text-pink-500 font-bold">+</span>
+          <span className="text-sm text-pink-600 mt-1 font-medium">
+            Upload Image
+          </span>
+        </div>
       </div>
     </IKContext>
   );

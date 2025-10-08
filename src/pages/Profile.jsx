@@ -14,7 +14,6 @@ export default function ProfilePage() {
     );
   }
 
-  // ✅ لو عند المستخدم صورة، نعرضها — لو مفيش نرجع للصورة الافتراضية
   const userPhoto =
     userData.photo ||
     `https://ui-avatars.com/api/?name=${encodeURIComponent(
