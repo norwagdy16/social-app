@@ -8,6 +8,8 @@ import DropDownComment from "./DropDowenComments";
 export default function Comments({ comment, postUserId, callback }) {
   const { userData } = useContext(AuthContext);
 
+  if (!comment) return null; 
+
   const user = comment.user || {};
 
   return (
@@ -23,7 +25,7 @@ export default function Comments({ comment, postUserId, callback }) {
           data={comment.createdAt}
         />
 
-        {userData._id === user._id && (
+        {userData?._id === user?._id && (
           <DropDownComment commentId={comment._id} callback={callback} />
         )}
       </div>
